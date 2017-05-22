@@ -17,8 +17,24 @@ import firebase, { firebaseAuth } from "./firebase";
 
 const { FacebookAuthProvider } = firebase.auth;
 
-export default class HomeView extends Component {
 
+
+export default class HomeView extends Component {
+state = {
+    credential: null
+  }
+
+  componentWillMount() {
+    this.authenticateUser();
+  }
+
+  authenticateUser = () => {
+    AccessToken.getCurrentAccessToken().then((data) => {
+      const { accessToken } = data
+      const credential = FacebookAuthProvider.credential(accessToken)
+      
+    })
+  }
 
   render() {
 
@@ -47,13 +63,11 @@ handleLoginFinished = (error, result) => {
     }
   }
 
-  handleButtonPress = (error, result) => {
-    if (error) {
-        console.error(error)
-      }
-      else {
+  handleButtonPress = () => {
+    if (credential = null) {
       Actions.login()
-    }
+        
+      }
   }
 }
 
