@@ -7,9 +7,14 @@ import {
 } from 'react-native';
 
 import {Scene, Router} from 'react-native-router-flux'
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 import LoginView from './components/LoginView'
 import HomeView from './components/HomeView'
+
+EStyleSheet.build({
+  $fontColor: 'black'
+});
 
 class Tevenly extends React.Component {
   render() {
@@ -21,4 +26,5 @@ class Tevenly extends React.Component {
     </Router>
   }
 }
+
 AppRegistry.registerComponent('Tevenly', () => Tevenly);

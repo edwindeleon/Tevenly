@@ -32,8 +32,16 @@ state = {
     AccessToken.getCurrentAccessToken().then((data) => {
       const { accessToken } = data
       const credential = FacebookAuthProvider.credential(accessToken)
-      
+      firebaseAuth.signInWithCredential(credential).then((credentials) => {
+        this.setState({ credentials })
+      })
     })
+  }
+  handleButtonPress = () => {
+    if (credential = null) {
+      Actions.login()
+        
+      }
   }
 
   render() {
@@ -53,7 +61,7 @@ state = {
   }
 
 
-handleLoginFinished = (error, result) => {
+  handleLoginFinished = (error, result) => {
     if (error) {
       console.error(error)
     } else if (result.isCancelled) {
@@ -63,12 +71,7 @@ handleLoginFinished = (error, result) => {
     }
   }
 
-  handleButtonPress = () => {
-    if (credential = null) {
-      Actions.login()
-        
-      }
-  }
+  
 }
 
 

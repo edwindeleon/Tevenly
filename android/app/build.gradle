@@ -96,6 +96,16 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+    signingConfigs {
+        release {
+            if (project.hasProperty('TEVENLY_RELEASE_STORE_FILE')) {
+                storeFile file(TEVENLY_RELEASE_STORE_FILE)
+                storePassword TEVENLY_RELEASE_STORE_PASSWORD
+                keyAlias TEVENLY_RELEASE_KEY_ALIAS
+                keyPassword TEVENLY_RELEASE_KEY_PASSWORD
+            }
+        }
+    }
     splits {
         abi {
             reset()
@@ -108,6 +118,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -133,8 +144,10 @@ dependencies {
     compile "com.android.support:appcompat-v7:23.0.3"
     compile "com.facebook.react:react-native:+"  // From node_modules
     compile project(':react-native-smart-splashscreen')
-    compile "com.facebook.android:facebook-android-sdk:[4,5)"
-    compile project(':react-native-fbsdk')
+    compile(project(':react-native-fbsdk')){
+      exclude(group: 'com.facebook.android', module: 'facebook-android-sdk')
+    }
+    compile "com.facebook.android:facebook-android-sdk:4.22.1"
 }
 
 // Run this once to be able to run the application with BUCK

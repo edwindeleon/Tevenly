@@ -4,12 +4,16 @@ import {
   View,
   Text,
   Platform,
-  Image
+  Image,
+  Button,
+  TouchableOpacity
 } from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet'
 import SplashScreen from 'react-native-smart-splash-screen'
 import FBSDK, {
   LoginButton,
-  AccessToken
+  AccessToken,
+  LoginManager
 } from 'react-native-fbsdk'
 
 import { Actions } from 'react-native-router-flux'
@@ -35,6 +39,51 @@ export default class LoginView extends Component {
   componentWillMount() {
     this.authenticateUser();
   }
+  
+
+  render() {
+
+
+    return (
+      <Image source={require('../src/bg.jpg')} style={styles.bgContainer} resizeMode={Image.resizeMode.sretch}>
+        <View style={styles.container}>
+            <Image source={require('../src/logo_wh.png')} style={styles.logo} ></Image>
+          
+            <TouchableOpacity
+              onPress={this.handleFacebookLogin}>
+              <Text style={stylesEs.fbButtonText} >Entrar con Facebook</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={stylesEs.gButtonText} >Entrar con Google +</Text>
+            </TouchableOpacity>
+
+             <LoginButton
+          readPermissions={['public_profile', 'email']}
+          onLoginFinished={ this.handleLoginFinished }
+          onLogoutFinished={ this.handleButtonPress }
+          />
+        </View>
+        
+      </Image>
+    );
+  }
+    handleFacebookLogin () {
+    LoginManager.logInWithReadPermissions(['public_profile', 'email', 'user_friends']).then(
+      function (result) {
+        if (result.isCancelled) {
+          console.log('Login cancelled')
+        } else {
+          Actions.root()
+          this.authenticateUser()
+              
+        }
+      },
+      function (error) {
+        console.log('Login fail with error: ' + error)
+      }
+      
+    )
+  }
 
   authenticateUser = () => {
     AccessToken.getCurrentAccessToken().then((data) => {
@@ -48,28 +97,7 @@ export default class LoginView extends Component {
       })
     })
   }
-
-
-  render() {
-
-    return (
-      <Image source={require('../src/bg.jpg')} style={styles.bgContainer} resizeMode={Image.resizeMode.sretch}>
-        <View style={styles.container}>
-            <Image source={require('../src/logo_wh.png')} style={styles.logo} ></Image>
-          <Text style={styles.welcome}>
-            Bienvenidos a Tevenly!
-          </Text>
-        </View>
-        <LoginButton
-          readPermissions={['public_profile', 'email']}
-          onLoginFinished={ this.handleLoginFinished }
-          onLogoutFinished={ this.handleButtonPress }/>
-      </Image>
-    );
-  }
-
-
-handleLoginFinished = (error, result) => {
+  handleLoginFinished = (error, result) => {
     if (error) {
       console.error(error)
     } else if (result.isCancelled) {
@@ -78,11 +106,38 @@ handleLoginFinished = (error, result) => {
       this.authenticateUser()
     }
   }
+
   handleButtonPress = () => {
-    Actions.login()
+    if (credential = null) {
+      Actions.login()
+        
+      }
   }
 }
+const stylesEs = EStyleSheet.create({
 
+  fbButtonText: {
+    width: '70%',
+    height: '2rem',
+    color: '#ffffff',
+    textAlign: 'center',
+    backgroundColor: '#4267B8',
+    opacity: 0.8,
+    paddingVertical: 5,
+    marginTop: '2rem',
+  },
+  gButtonText: {
+    width: '70%',
+    height: '2rem',
+    color: '#ffffff',
+    textAlign: 'center',
+    backgroundColor: '#ff4141',
+    opacity: 0.7,
+    paddingVertical: 5,
+    marginTop: '1rem',
+  },
+
+});
 const styles = StyleSheet.create({
   bgContainer: {
     flex: 1,
@@ -108,4 +163,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
   },
+  
+  
+  
 });
+
